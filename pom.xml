@@ -75,6 +75,8 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+<!--		to read .env file data into application.properties-->
+
 	</dependencies>
 
 	<build>
