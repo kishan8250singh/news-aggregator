@@ -23,7 +23,8 @@ public class User {
 
     private  String profilePicture;
 
-    // many user can fetch many topics
+    // Many to Many relation -:  many user can fetch many topics
+    // used in TopicService -> user ke sath uska topic link krne me
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name  = "user_topics",

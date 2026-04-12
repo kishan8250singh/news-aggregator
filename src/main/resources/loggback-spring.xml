@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- =============================================
+         VARIABLE — Log files kahan save honge
+         Logs folder project ke andar banega
+         ============================================= -->
+    <property name="LOG_PATH" value="C:/Users/kisha/Downloads/news-aggregator/logs"/>
+
+    <!-- =============================================
+         CONSOLE APPENDER
+         Ye IntelliJ console mein print karta hai
+         Pattern matlab: date [level] classname - message
+         ============================================= -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- %d = date, %-5level = log level,
+                 %logger{36} = class name, %msg = message -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5level] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- =============================================
+         FILE APPENDER — Normal Logs
+         Har din nayi file banti hai
+         30 din baad purani automatically delete
+         ============================================= -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- Current log file ka naam -->
+        <file>${LOG_PATH}/news-aggregator.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Har din nayi file — date ke saath -->
+            <!-- e.g. news-aggregator-2026-04-07.log -->
+            <fileNamePattern>${LOG_PATH}/news-aggregator-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 30 din purani files auto delete ho jaayengi -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5level] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- =============================================
+         ERROR FILE APPENDER — Sirf Errors
+         Alag file mein sirf ERROR logs jaayenge
+         Jab kuch crash ho — seedha ye file dekho!
+         ============================================= -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/news-aggregator-error.log</file>
+
+        <!-- Sirf ERROR level logs is file mein jaayenge -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>      <!-- ERROR aaya → file mein daalo -->
+            <onMismatch>DENY</onMismatch>  <!-- Baaki sab → ignore karo -->
+        </filter>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/news-aggregator-error-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5level] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- =============================================
+         HAMARA APP KA LOGGER
+         com.newsaggregator = tera package
+         DEBUG level = sab kuch print hoga
+         3 jagah print hoga: Console + File + ErrorFile
+         ============================================= -->
+    <logger name="com.newsaggregator" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE"/>    <!-- Console mein bhi -->
+        <appender-ref ref="FILE"/>       <!-- File mein bhi -->
+        <appender-ref ref="ERROR_FILE"/> <!-- Error file mein bhi -->
+    </logger>
+
+    <!-- =============================================
+         ROOT LOGGER — Baaki sab libraries
+         ERROR only — Spring, Hibernate sab chup rahenge
+         Sirf teri app ki logs dikhegi — clean console!
+         ============================================= -->
+    <root level="ERROR">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
+    </root>
+
+</configuration>

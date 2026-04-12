@@ -5,7 +5,10 @@ import net.minidev.asm.ConvertDate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface Topic_repo extends JpaRepository<Topic,Long> {
-   // boolean exitsByName(String name);
+    Optional<Topic> findByName(String lowerCase);
+  //   boolean exitsByName(String name);
 }
